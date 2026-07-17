@@ -20,13 +20,13 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       emailError.textContent = ''
-      passwordError.textCContent = ''
+      passwordError.textContent = ''
       // get the value
       const email = form.email.value;
       const password = form.password.value; 
 
       try {
-        conat res = await fetch('/login', {
+        const res = await fetch('/login', {
           method: "POST",
           body: JSON.stringify({ email, password }),
           headers: {'Content-Type': 'application/json'}
@@ -37,12 +37,11 @@
             emailError.textContent = data.errors.email;
             passwordError.textContent = data.errors.password;
         }
-
         if (data.user) {
           location.assign('/');
         }
       }catch(e){
-        console.log(err);
+        console.log(e);
       }
     })
 
