@@ -14,6 +14,15 @@ const handleErrors = (e) => {
       errors[properties.path] = properties.message
     })
   }
+  if (e.message === 'Incorrect Email') {
+    errors.email = "Email is not registered"
+
+  }
+  if (e.message === 'Incorrect Password') {
+    errors.password = "That password is incorrect"
+  }
+
+
   return errors
 }
 
@@ -52,9 +61,12 @@ module.exports.login_post = async (req, res) => {
   const { email, password } = req.body
   try {
     const user = await User.login(email, password);
+    const token = createToken(user._id)
+    res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
     res.status(200).json({ user: user._id })
 
   } catch (e) {
-    res.status(400).json({})
+    const errors = handleErrors(e);
+    res.status(400).json({ errors })
   }
 }
